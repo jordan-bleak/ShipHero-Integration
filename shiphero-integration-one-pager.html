@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redo + ShipHero Integration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --page-bg: #F7F6F4;
+    --surface-bg: #FFFFFF;
+    --text-primary: #2A2A28;
+    --text-secondary: #5A5955;
+    --divider: #E4E3DF;
+    --orange: #FF4405;
+    --black: #0D0D0D;
+    --gray-100: #F0EFED;
+    --gray-200: #E4E3DF;
+    --gray-400: #9B9A96;
+    --gray-600: #5A5955;
+    --gray-800: #2A2A28;
+  }
+
+  body {
+    background: #CCCAC6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .page {
+    width: 1056px;
+    min-height: 1632px;
+    background: var(--page-bg);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: var(--black);
+    height: 56px;
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .page-header img { height: 22px; }
+  .page-header-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 7px;
+    font-weight: 700;
+    color: var(--gray-400);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ── CONTENT ── */
+  .page-content {
+    flex: 1;
+    padding: 48px 48px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--divider);
+    margin-bottom: 32px;
+  }
+  .hero-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 7px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .hero-headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 46px;
+    margin-bottom: 14px;
+    max-width: 680px;
+  }
+  .hero-value-prop {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 18px;
+    max-width: 560px;
+  }
+
+  /* ── TWO-COL ROW ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 6.5px;
+    font-weight: 700;
+    color: var(--gray-400);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 24px;
+    margin-bottom: 12px;
+  }
+  .body-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 8.5px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 14px;
+  }
+
+  /* ── DIAGRAM ── */
+  .diagram-container {
+    background: var(--surface-bg);
+    border: 1px solid var(--gray-200);
+    border-radius: 4px;
+    padding: 28px 24px;
+  }
+
+  /* ── WHAT'S NEW ── */
+  .whats-new {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .whats-new-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 16px;
+  }
+  .callout-box {
+    background: var(--black);
+    border-radius: 4px;
+    padding: 24px;
+  }
+  .callout-box .section-label { color: var(--orange); }
+  .callout-box .section-title {
+    color: #FFFFFF;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .callout-box .body-text { color: #9B9A96; line-height: 15px; }
+
+  .info-box {
+    background: var(--gray-100);
+    border-radius: 4px;
+    padding: 24px;
+    border: 1px solid var(--gray-200);
+  }
+  .info-box .section-title { font-size: 15px; margin-bottom: 10px; }
+  .info-box .body-text { line-height: 15px; }
+
+  /* ── BENEFITS ── */
+  .benefits {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--divider);
+  }
+  /* last section before footer has no border */
+  .settings-preview { margin-bottom: 0; }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .benefit-item {
+    padding: 16px;
+    background: var(--surface-bg);
+    border: 1px solid var(--gray-200);
+    border-radius: 4px;
+  }
+  .benefit-number {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--orange);
+    line-height: 32px;
+    margin-bottom: 8px;
+  }
+  .benefit-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .benefit-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 13px;
+  }
+
+  /* ── SETTINGS PREVIEW ── */
+  .settings-preview {
+    margin-top: 0;
+  }
+  .settings-card {
+    background: #FFFFFF;
+    border: 1px solid var(--gray-200);
+    border-radius: 6px;
+    padding: 0;
+    margin-top: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+  .settings-inner {
+    padding: 20px 24px 20px;
+    transform-origin: top left;
+  }
+  .sh-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #F0EFED;
+  }
+  .sh-logo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sh-logo-box {
+    width: 36px;
+    height: 36px;
+    background: #F4F4F4;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 7px;
+    font-weight: 700;
+    color: #9B9A96;
+  }
+  .sh-title { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; color: #0D0D0D; }
+  .sh-subtitle { font-family: 'Inter', sans-serif; font-size: 7.5px; color: #5A5955; margin-top: 2px; }
+  .sh-connected { font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 600; color: #16A34A; }
+
+  .sh-field-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    color: #2A2A28;
+    margin-bottom: 4px;
+  }
+  .sh-input {
+    width: 100%;
+    height: 26px;
+    border: 1px solid #E4E3DF;
+    border-radius: 4px;
+    padding: 0 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    color: #9B9A96;
+    background: #FAFAFA;
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+  }
+  .sh-input-hint { font-family: 'Inter', sans-serif; font-size: 7px; color: #9B9A96; margin-bottom: 10px; }
+  .sh-section-head {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #0D0D0D;
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
+  .sh-section-sub { font-family: 'Inter', sans-serif; font-size: 7.5px; color: #5A5955; margin-bottom: 8px; }
+  .sh-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+  }
+  .sh-toggle-left { display: flex; align-items: center; gap: 8px; }
+  .sh-toggle {
+    width: 28px;
+    height: 16px;
+    background: #0D0D0D;
+    border-radius: 8px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .sh-toggle::after {
+    content: '';
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+  }
+  .sh-toggle-label { font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 600; color: #2A2A28; }
+  .sh-mini-input {
+    height: 22px;
+    width: 100px;
+    border: 1px solid #E4E3DF;
+    border-radius: 4px;
+    padding: 0 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    color: #2A2A28;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+  }
+  .sh-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #F0EFED;
+    border: 1px solid #E4E3DF;
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    color: #2A2A28;
+    margin-right: 4px;
+  }
+  .sh-reject-section {
+    background: #FFF4F0;
+    border: 1.5px solid #FF4405;
+    border-radius: 5px;
+    padding: 10px 12px 10px;
+    margin-top: 10px;
+    position: relative;
+  }
+  .sh-reject-head {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #0D0D0D;
+    margin-bottom: 2px;
+  }
+  .sh-reject-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 8.5px;
+    color: #2A2A28;
+    margin-bottom: 7px;
+  }
+  .sh-reject-input {
+    width: 100%;
+    height: 26px;
+    border: 1px solid #FFBDAA;
+    border-radius: 4px;
+    padding: 0 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    color: #9B9A96;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .sh-reject-hint { font-family: 'Inter', sans-serif; font-size: 7px; color: #5A5955; line-height: 11px; }
+  .sh-callout-badge {
+    position: absolute;
+    top: -9px;
+    right: 10px;
+    background: #FF4405;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .sh-advanced {
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    font-weight: 600;
+    color: #5A5955;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sh-btn-row { display: flex; gap: 8px; }
+  .sh-btn-primary {
+    background: #0D0D0D;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-radius: 5px;
+  }
+  .sh-btn-secondary {
+    background: #FFFFFF;
+    color: #2A2A28;
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 5px;
+    border: 1px solid #E4E3DF;
+  }
+  .sh-two-col-settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: var(--black);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-left {
+    font-family: 'Inter', sans-serif;
+    font-size: 7px;
+    color: var(--gray-400);
+    letter-spacing: 0.08em;
+  }
+  .footer-right {
+    font-family: 'Inter', sans-serif;
+    font-size: 7px;
+    color: var(--gray-400);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQwIiBoZWlnaHQ9IjQ1IiB2aWV3Qm94PSIwIDAgMTQwIDQ1IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjQ0LjMwNDIiIGZpbGw9IiMxNDE0MTQiLz4KPHBhdGggZD0iTTEzMC41MDYgMjIuMDg1QzEzMC41MDYgMjQuMTk0NyAxMzAuMDcyIDI4Ljk1IDEyNS4yOTYgMzIuMTk4M0MxMjQuMDYgMzMuMDM1NSAxMjIuODU4IDMzLjYwNDggMTIxLjQ1NSAzNC4wMDY2QzEyMC4wODYgMzQuNDA4NSAxMTguMDE1IDM0LjgxMDMgMTE0LjY3NSAzNC44MTAzQzEwOS42NjUgMzQuODEwMyAxMDYuNjI2IDMzLjcwNTIgMTA0LjcyMiAzMi41NjY3QzEwNC4wODggMzIuMTk4MyAxMDIuOTE5IDMxLjQyODEgMTAxLjc1IDMwLjAyMTZDOTkuMjQ0NyAyNi45NzQyIDk5LjE0NDUgMjMuODkzNCA5OS4xNDQ1IDIyLjM4NjRDOTkuMTQ0NSAxNi40MjU2IDEwMi4zMTcgMTMuNDQ1MiAxMDQuMjU1IDEyLjEzOTJDMTA2LjI1OSAxMC43NjYyIDEwOS4xMzEgOS41NjA2MyAxMTQuNDA4IDkuNDkzNjVDMTE1LjQ3NyA5LjQ5MzY1IDExNi41MTIgOS40OTM2NSAxMTcuNTgxIDkuNTk0MTJDMTIzLjgyNiAxMC4wOTY0IDEyNi43MzIgMTIuNTc0NSAxMjguMzY5IDE0LjkxODdDMTI5LjEzNyAxNi4wNTcyIDEzMC41MDYgMTguNTAxOCAxMzAuNTA2IDIyLjA4NVpNMTIxLjgyMiAyMi4xNTJDMTIxLjgyMiAxOS4xMzgxIDEyMC41NTMgMTcuMjI5MyAxMTkuNjg1IDE2LjQ1OTFDMTE5LjM1MSAxNi4xMjQyIDExOC41NDkgMTUuNTIxNCAxMTcuNDE0IDE1LjExOTZDMTE2LjgxMyAxNC45MTg3IDExNi4xNzggMTQuNzUxMiAxMTQuOTA5IDE0Ljc1MTJDMTEzLjgwNyAxNC43NTEyIDExMi45MDUgMTQuODUxNyAxMTEuODcgMTUuMjg3QzEwOS4wOTcgMTYuNDU5MSAxMDcuODI4IDE5LjMwNTUgMTA3LjgyOCAyMi4xODU1QzEwNy44MjggMjIuNjIwOCAxMDcuODYyIDIzLjgyNjQgMTA4LjI5NiAyNS4wNjU0QzEwOC45NjQgMjYuOTc0MiAxMTAuMzMzIDI4LjQxNDIgMTExLjg3IDI5LjE4NDRDMTEyLjczOCAyOS42MTk3IDExMy44MDcgMjkuOTU0NiAxMTUuMjQzIDI5Ljk1NDZDMTE2LjM3OSAyOS45NTQ2IDExNy4zNDcgMjkuNzUzNyAxMTguMDgyIDI5LjQxODhDMTIwLjg1NCAyOC4yMTMyIDEyMS44MjIgMjUuMzY2OCAxMjEuODIyIDIyLjE1MloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik05Ni43MzI2IDI3LjM3NkM5Ni43MzI2IDI3LjM3NiA5Ni43MzI2IDI3LjM3NiA5Ni43MzI2IDI3LjM3NkM5Ni43MzI2IDI3LjM3NiA5NC4zMjc5IDMwLjE4OSA5My45MjcxIDMwLjY5MTNDOTMuMDkyMSAzMS41Mjg1IDkxLjY4OTQgMzIuMzMyMiA5MS4xODg0IDMyLjYwMDFDOTAuMTE5NiAzMy4xNjk0IDg4LjY4MzUgMzMuNTM3NyA4Ny40ODExIDMzLjgzOTFDODYuNjEyNyAzNC4wMDY2IDg0LjI0MTQgMzQuMDA2NiA4NC4yNDE0IDM0LjAwNjZINjkuMjc4N1YxMC4zNjQzSDgyLjY3MTdDODMuNjA2OCAxMC4zNjQzIDg0LjU0MiAxMC4zOTc3IDg1LjQ3NzIgMTAuNDY0N0M5MC45NTQ2IDEwLjkzMzUgOTMuMzU5MyAxMy4yNDQyIDk0Ljc2MjEgMTUuMjg2OUM5Ni43NjYgMTguMTY2OSA5Ni44MzI4IDIxLjE4MDggOTYuODMyOCAyMi40NTMzWk04OC41ODMzIDIyLjI1MjRDODguNTgzMyAyMS41MTU3IDg4LjQ4MzEgMTguODcwMSA4Ni40MTIzIDE3LjI2MjdDODQuNjQyMiAxNS45MjMyIDgyLjEzNzMgMTUuOTkwMiA4MS41Njk1IDE1Ljk5MDJINzcuNTI4MlYyOC42NDg1SDgxLjgzNjdDODIuMzA0MyAyOC42NDg1IDgyLjgwNTMgMjguNjE1IDgzLjMwNjIgMjguNTQ4MUM4Ni4yMTE5IDI4LjE3OTcgODcuMjQ3MyAyNi44NzM3IDg3LjgxNTEgMjUuNjY4MUM4OC41NDk5IDI0LjE2MTIgODguNTgzMyAyMi44ODg2IDg4LjU4MzMgMjIuMjUyNFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik02NS4yNTUzIDM0LjAwNjZINDAuMDcyNVYxMC4zNjQzSDY0Ljk1NDdWMTUuNjU1M0g0OC41MjI0VjE5LjUzOTlINjMuNzE5VjI0Ljg2NDRINDguNTIyNFYyOC42NDg1SDY1LjI1NTNWMzQuMDA2NloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0zNi42NDcxIDM0LjAwNjZIMjcuMzI4OEwyMi40NTI2IDI1LjQwMDJIMTcuOTc3MVYzNC4wMDY2SDkuNDkzNzdWMTAuMzY0M0gyNi44NjEyQzMwLjAzNDEgMTAuMzY0MyAzMy4wNzM0IDEwLjU5ODcgMzQuOTc3MiAxMy42MTI2QzM1LjQxMTQgMTQuMzE1OCAzNi4xNzk1IDE1LjcyMjMgMzYuMTc5NSAxNy44NjU1QzM2LjE3OTUgMTguOTcwNiAzNS45NDU3IDIyLjExODQgMzIuOTczMiAyMy43NTkzQzMyLjQwNTUgMjQuMDk0MiAzMS45NzEzIDI0LjI2MTYgMzAuNzY4OSAyNC41NjNMMzYuNjQ3MSAzNC4wMDY2Wk0yNy43NjMgMTcuODk5QzI3Ljc2MyAxNy42OTgxIDI3LjcyOTYgMTcuMTYyMyAyNy4zOTU2IDE2LjY5MzRDMjYuODI3OCAxNS44NTYyIDI1Ljg5MjcgMTUuNzIyMyAyNC45OTA5IDE1LjcyMjNIMTcuOTc3MVYyMC4wNzU3SDI0LjMyMjlDMjUuOTI2MSAyMC4wNzU3IDI2Ljc2MSAxOS44NzQ4IDI3LjI5NTQgMTkuMjM4NUMyNy43Mjk2IDE4LjcwMjcgMjcuNzYzIDE4LjE2NjkgMjcuNzYzIDE3Ljg5OVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Redo">
+    <span class="page-header-label">ShipHero Integration · Product Update</span>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="page-content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-eyebrow">Redo + ShipHero</div>
+      <div class="hero-headline">Warehouse rejections,<br>handled automatically.</div>
+      <div class="hero-value-prop">Configure which ShipHero statuses count as a rejection — Redo takes it from there, no manual triage queue, no repeat work.</div>
+    </div>
+
+    <!-- TWO-COL: PROBLEM + DIAGRAM -->
+    <div class="two-col">
+
+      <!-- LEFT: PROBLEM -->
+      <div>
+        <div class="section-label">The Problem</div>
+        <div class="section-title">Warehouse rejections don't have a standard status in ShipHero</div>
+        <div class="body-text" style="margin-bottom:12px;">
+          Every warehouse names its rejection statuses differently. "Damaged." "Not received." "Wrong item." "Fraud." ShipHero doesn't emit a universal "rejected" signal — it just sends whatever status the warehouse team entered.
+        </div>
+        <div class="body-text" style="margin-bottom:12px;">
+          Redo's old behavior: anything it didn't recognize landed in a manual review queue. Ops teams had to triage those returns by hand, status by status, over and over.
+        </div>
+        <div class="body-text">
+          The result was a backlog of returns sitting in limbo — invisible to customer service, inconsistent in finance, and a daily burden for whoever owned the queue.
+        </div>
+      </div>
+
+      <!-- RIGHT: HOW IT WORKS + DIAGRAM -->
+      <div>
+        <div class="section-label">How the Integration Works</div>
+        <div class="section-title" style="margin-bottom:16px;">Redo and ShipHero stay in sync across the full return lifecycle</div>
+        <div class="diagram-container">
+          <svg width="100%" viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+
+            <!-- REDO BOX -->
+            <rect x="12" y="40" width="200" height="240" rx="4" fill="#FFFFFF" stroke="#E4E3DF" stroke-width="1.5"/>
+            <rect x="12" y="40" width="200" height="32" rx="4" fill="#0D0D0D"/>
+            <rect x="12" y="60" width="200" height="12" fill="#0D0D0D"/>
+            <text x="112" y="62" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF" letter-spacing="0.10em" text-transform="uppercase" font-family="Inter, sans-serif">REDO</text>
+
+            <!-- REDO inner content -->
+            <text x="32" y="100" font-size="7" fill="#9B9A96" letter-spacing="0.08em" font-family="Inter, sans-serif">RETURN MANAGEMENT</text>
+            <rect x="28" y="110" width="168" height="28" rx="3" fill="#F0EFED" stroke="#E4E3DF" stroke-width="1"/>
+            <text x="112" y="128" text-anchor="middle" font-size="7.5" fill="#2A2A28" font-family="Inter, sans-serif">Return created &amp; approved</text>
+
+            <text x="32" y="162" font-size="7" fill="#9B9A96" letter-spacing="0.08em" font-family="Inter, sans-serif">INBOUND PROCESSING</text>
+            <rect x="28" y="172" width="168" height="28" rx="3" fill="#F0EFED" stroke="#E4E3DF" stroke-width="1"/>
+            <text x="112" y="190" text-anchor="middle" font-size="7.5" fill="#2A2A28" font-family="Inter, sans-serif">Return status updated</text>
+
+            <!-- REJECTION CONFIG BOX — orange accent -->
+            <rect x="28" y="216" width="168" height="48" rx="3" fill="#FFF4F0" stroke="#FF4405" stroke-width="1.5"/>
+            <rect x="28" y="216" width="168" height="16" rx="3" fill="#FF4405"/>
+            <rect x="28" y="224" width="168" height="8" fill="#FF4405"/>
+            <text x="112" y="228" text-anchor="middle" font-size="7" font-weight="700" fill="#FFFFFF" letter-spacing="0.10em" font-family="Inter, sans-serif">REJECTION STATUS CONFIG</text>
+            <text x="112" y="246" text-anchor="middle" font-size="7" fill="#FF4405" font-family="Inter, sans-serif">"damaged" · "not received"</text>
+            <text x="112" y="257" text-anchor="middle" font-size="7" fill="#FF4405" font-family="Inter, sans-serif">"wrong item" · "fraud"</text>
+
+            <!-- SHIPHERO BOX -->
+            <rect x="408" y="40" width="200" height="240" rx="4" fill="#FFFFFF" stroke="#E4E3DF" stroke-width="1.5"/>
+            <rect x="408" y="40" width="200" height="32" rx="4" fill="#2A2A28"/>
+            <rect x="408" y="60" width="200" height="12" fill="#2A2A28"/>
+            <text x="508" y="62" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF" letter-spacing="0.10em" font-family="Inter, sans-serif">SHIPHERO</text>
+
+            <!-- ShipHero inner content -->
+            <text x="428" y="100" font-size="7" fill="#9B9A96" letter-spacing="0.08em" font-family="Inter, sans-serif">WAREHOUSE EVENTS</text>
+            <rect x="424" y="110" width="168" height="22" rx="3" fill="#F0EFED" stroke="#E4E3DF" stroke-width="1"/>
+            <text x="508" y="125" text-anchor="middle" font-size="7.5" fill="#2A2A28" font-family="Inter, sans-serif">RMA received</text>
+
+            <rect x="424" y="140" width="168" height="22" rx="3" fill="#F0EFED" stroke="#E4E3DF" stroke-width="1"/>
+            <text x="508" y="155" text-anchor="middle" font-size="7.5" fill="#2A2A28" font-family="Inter, sans-serif">Item inspected</text>
+
+            <rect x="424" y="170" width="168" height="22" rx="3" fill="#F0EFED" stroke="#E4E3DF" stroke-width="1"/>
+            <text x="508" y="185" text-anchor="middle" font-size="7.5" fill="#2A2A28" font-family="Inter, sans-serif">Complete</text>
+
+            <rect x="424" y="200" width="168" height="22" rx="3" fill="#FFF4F0" stroke="#FF4405" stroke-width="1"/>
+            <text x="508" y="215" text-anchor="middle" font-size="7.5" fill="#FF4405" font-family="Inter, sans-serif">Custom status (e.g. "damaged")</text>
+
+            <text x="508" y="254" text-anchor="middle" font-size="7" fill="#9B9A96" font-family="Inter, sans-serif">Sends webhooks to Redo</text>
+            <text x="508" y="266" text-anchor="middle" font-size="7" fill="#9B9A96" font-family="Inter, sans-serif">on every status change</text>
+
+            <!-- ARROW 1: Redo → ShipHero (top, RMA push) -->
+            <defs>
+              <marker id="arrowRight" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 7 3.5, 0 7" fill="#2A2A28"/>
+              </marker>
+              <marker id="arrowLeft" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
+                <polygon points="7 0, 0 3.5, 7 7" fill="#5A5955"/>
+              </marker>
+              <marker id="arrowLeftOrange" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
+                <polygon points="7 0, 0 3.5, 7 7" fill="#FF4405"/>
+              </marker>
+            </defs>
+
+            <!-- Arrow 1: RMA push (Redo → ShipHero) -->
+            <line x1="213" y1="124" x2="406" y2="124" stroke="#2A2A28" stroke-width="1.5" marker-end="url(#arrowRight)" stroke-dasharray="0"/>
+            <rect x="270" y="109" width="80" height="14" rx="2" fill="#2A2A28"/>
+            <text x="310" y="119.5" text-anchor="middle" font-size="6.5" fill="#FFFFFF" font-weight="600" letter-spacing="0.04em" font-family="Inter, sans-serif">RMA PUSHED</text>
+
+            <!-- Arrow 2: Complete status (ShipHero → Redo) -->
+            <line x1="423" y1="186" x2="213" y2="186" stroke="#5A5955" stroke-width="1.5" marker-end="url(#arrowLeft)" stroke-dasharray="4 3"/>
+            <rect x="267" y="173" width="89" height="14" rx="2" fill="#F0EFED" stroke="#E4E3DF" stroke-width="1"/>
+            <text x="311" y="183.5" text-anchor="middle" font-size="6.5" fill="#5A5955" font-weight="600" letter-spacing="0.04em" font-family="Inter, sans-serif">WEBHOOK UPDATE</text>
+
+            <!-- Arrow 3: Rejection status (ShipHero → Redo rejection config) — orange -->
+            <path d="M424 211 L310 211 L310 240" stroke="#FF4405" stroke-width="1.5" fill="none" marker-end="url(#arrowLeftOrange)" stroke-dasharray="4 3"/>
+            <rect x="323" y="198" width="87" height="14" rx="2" fill="#FFF4F0" stroke="#FF4405" stroke-width="1"/>
+            <text x="366" y="208.5" text-anchor="middle" font-size="6.5" fill="#FF4405" font-weight="700" letter-spacing="0.04em" font-family="Inter, sans-serif">REJECTION ROUTED</text>
+
+            <!-- Legend -->
+            <line x1="28" y1="308" x2="52" y2="308" stroke="#2A2A28" stroke-width="1.5"/>
+            <text x="58" y="312" font-size="7" fill="#5A5955" font-family="Inter, sans-serif">Redo writes to ShipHero</text>
+            <line x1="200" y1="308" x2="224" y2="308" stroke="#5A5955" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="230" y="312" font-size="7" fill="#5A5955" font-family="Inter, sans-serif">ShipHero sends webhook</text>
+            <line x1="390" y1="308" x2="414" y2="308" stroke="#FF4405" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="420" y="312" font-size="7" fill="#FF4405" font-family="Inter, sans-serif">Rejection config intercepts</text>
+
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT'S NEW -->
+    <div class="whats-new">
+      <div class="section-label">What's New</div>
+      <div class="whats-new-inner">
+
+        <div class="callout-box">
+          <div class="section-label">New Feature</div>
+          <div class="section-title">Configurable rejection statuses</div>
+          <div class="body-text">
+            ShipHero doesn't emit a standard "rejected" event — every warehouse uses its own status names. Now you can tell Redo exactly which statuses your warehouse uses for rejections. When ShipHero sends one of them, Redo automatically marks the return (and every line item on it) as rejected and logs a timeline entry. No engineering work. No Redo-side mapping table to maintain. Your warehouse's vocabulary, respected as-is.
+          </div>
+        </div>
+
+        <div class="info-box">
+          <div class="section-label">Also Included</div>
+          <div class="section-title">Graceful handling of warehouse corrections</div>
+          <div class="body-text" style="margin-bottom:10px;">
+            Warehouses make mistakes. An item flagged as damaged gets re-inspected and approved. ShipHero updates the status to "complete."
+          </div>
+          <div class="body-text">
+            Redo catches that correction automatically. If a return that was marked rejected receives a "complete" status from ShipHero, Redo reopens it and processes it normally — no manual intervention needed. The warehouse's source-of-truth decision is reflected in Redo in real time.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BENEFITS -->
+    <div class="benefits">
+      <div class="section-label">Operational Benefits</div>
+      <div class="benefits-grid">
+
+        <div class="benefit-item">
+          <div class="benefit-number">01</div>
+          <div class="benefit-title">No more manual review queue</div>
+          <div class="benefit-desc">Warehouse rejections flow through automatically instead of piling up for ops to triage by hand.</div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-number">02</div>
+          <div class="benefit-title">Configure once, done</div>
+          <div class="benefit-desc">Add your statuses once in Redo settings. Every future rejection with those statuses is handled without repeat work.</div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-number">03</div>
+          <div class="benefit-title">Consistent state across teams</div>
+          <div class="benefit-desc">Customer service and finance see the warehouse's real-time decision — no lag, no contradictions between systems.</div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- SETTINGS PREVIEW -->
+    <div class="settings-preview">
+      <div class="section-label">Where to Configure It</div>
+      <div class="settings-card">
+        <div class="settings-inner">
+          <div class="sh-two-col-settings">
+
+            <!-- LEFT COLUMN: top fields + status updates -->
+            <div>
+              <!-- Header -->
+              <div class="sh-header">
+                <div class="sh-logo-row">
+                  <div class="sh-logo-box">SH</div>
+                  <div>
+                    <div class="sh-title">ShipHero</div>
+                    <div class="sh-subtitle">Connect your ShipHero account to automatically sync returns.</div>
+                  </div>
+                </div>
+                <div class="sh-connected">Connected</div>
+              </div>
+
+              <!-- Refresh Token -->
+              <div class="sh-field-label">Refresh Token <span style="font-weight:400;color:#9B9A96;">(Optional)</span></div>
+              <div class="sh-input">Enter new refresh token to update</div>
+              <div class="sh-input-hint">Enter a new refresh token to update</div>
+
+              <!-- Customer Account ID -->
+              <div class="sh-field-label">Customer Account ID <span style="font-weight:400;color:#9B9A96;">(Optional)</span></div>
+              <div class="sh-input" style="color:#2A2A28;">81356</div>
+              <div class="sh-input-hint">Only required if using an access token from a child account</div>
+
+              <!-- Status Updates -->
+              <div class="sh-section-head">Status Updates</div>
+              <div class="sh-section-sub">Set a custom ShipHero status when returns are rejected or reset.</div>
+              <div class="sh-toggle-row">
+                <div class="sh-toggle-left">
+                  <div class="sh-toggle"></div>
+                  <div class="sh-toggle-label">Update status on rejection</div>
+                </div>
+                <div class="sh-mini-input">Cancelled</div>
+              </div>
+              <div class="sh-toggle-row">
+                <div class="sh-toggle-left">
+                  <div class="sh-toggle"></div>
+                  <div class="sh-toggle-label">Update status on reset</div>
+                </div>
+                <div class="sh-mini-input">Cancelled</div>
+              </div>
+
+              <!-- Processable Statuses -->
+              <div class="sh-section-head">Processable Statuses</div>
+              <div style="border:1px solid #E4E3DF;border-radius:4px;padding:5px 8px;margin-bottom:3px;background:#FAFAFA;display:flex;align-items:center;gap:4px;">
+                <span class="sh-tag">Complete</span>
+              </div>
+              <div class="sh-input-hint">Select which ShipHero return statuses should trigger Redo return processing.</div>
+            </div>
+
+            <!-- RIGHT COLUMN: rejection config + buttons -->
+            <div style="padding-top:56px;">
+
+              <!-- Reject returns automatically — highlighted -->
+              <div class="sh-reject-section">
+                <div class="sh-callout-badge">New — Configure Here</div>
+                <div class="sh-reject-head">Reject returns automatically</div>
+                <div class="sh-reject-sub">ShipHero statuses that mean rejected</div>
+                <div class="sh-reject-input">e.g., damaged, missing items</div>
+                <div class="sh-reject-hint">When ShipHero sends one of these statuses, Redo marks the return as rejected. Type a status and press Enter to add. Case-insensitive.</div>
+              </div>
+
+              <!-- Advanced Settings -->
+              <div class="sh-advanced">
+                <span style="font-size:8px;">▶</span> Advanced Settings
+              </div>
+
+              <!-- Buttons -->
+              <div class="sh-btn-row">
+                <div class="sh-btn-primary">Save</div>
+                <div class="sh-btn-secondary">Cancel</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <span class="footer-left">Redo · May 2026 · ShipHero Integration Update</span>
+    <span class="footer-right">Confidential</span>
+  </div>
+
+</div>
+
+</body>
+</html>
